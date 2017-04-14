@@ -19,6 +19,9 @@ clean:
 kubectl:
 	@KUBE_VERSION=${KUBE_VERSION} ${build} kubectl
 
+kubeadm:
+	@KUBE_VERSION=${KUBE_VERSION} ${build} kubeadm
+
 kube-apiserver:
 	@KUBE_VERSION=${KUBE_VERSION} ${build} kube-apiserver
 
