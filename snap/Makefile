@@ -4,7 +4,7 @@ ifndef VERBOSE
 	MAKEFLAGS += --no-print-directory
 endif
 
-targets = kubectl kube-apiserver kube-controller-manager kube-scheduler kubelet kube-proxy
+targets = kubectl kube-apiserver kube-controller-manager kube-scheduler kubelet kube-proxy kubeadm
 
 build = ./build-scripts/build
 
