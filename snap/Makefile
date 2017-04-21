@@ -1,4 +1,5 @@
 KUBE_VERSION=$(shell curl -L https://dl.k8s.io/release/stable.txt)
+KUBE_ARCH=amd64
 
 ifndef VERBOSE
 	MAKEFLAGS += --no-print-directory
@@ -10,32 +11,37 @@ build = ./build-scripts/build
 
 .PHONY: $(targets)
 
+all-arch:
+	for arch in amd64 arm arm64 ppc64le s390x ; do \
+		make KUBE_ARCH=$$arch default; \
+	done
+
 default:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} $(targets)
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} $(targets)
 
 clean:
 	@rm -rf build
 
 kubectl:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kubectl
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kubectl
 
 kubeadm:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kubeadm
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kubeadm
 
 kubefed:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kubefed
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kubefed
 
 kube-apiserver:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kube-apiserver
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kube-apiserver
 
 kube-controller-manager:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kube-controller-manager
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kube-controller-manager
 
 kube-scheduler:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kube-scheduler
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kube-scheduler
 
 kubelet:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kubelet
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kubelet
 
 kube-proxy:
-	@KUBE_VERSION=${KUBE_VERSION} ${build} kube-proxy
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH=${KUBE_ARCH} ${build} kube-proxy

@@ -1,4 +1,5 @@
 name: kube-proxy
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: Kubernetes network proxy runs on each node.
 description: |

@@ -11,7 +11,7 @@ if [ -z "$KUBE_SNAP_BINS" ]; then
   cd $KUBE_SNAP_BINS
   for app in $apps; do
     curl -LO \
-      https://dl.k8s.io/${KUBE_VERSION}/bin/linux/amd64/$app
+      https://dl.k8s.io/${KUBE_VERSION}/bin/linux/${KUBE_ARCH}/$app
     chmod +x $app
   done
   cd ../../..
@@ -28,6 +28,7 @@ for app in $apps; do
   mkdir -p $build_dir
 
   sed "s/KUBE_VERSION/${KUBE_VERSION:1}/g" $app.yaml > $build_dir/snapcraft.yaml
+  sed -i "s/KUBE_ARCH/${KUBE_ARCH}/g" $build_dir/snapcraft.yaml
 
   (cd $build_dir && snapcraft)
   mv $build_dir/*.snap build

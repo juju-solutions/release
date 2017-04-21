@@ -1,4 +1,5 @@
 name: kubefed
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: kubefed controls the Kubernetes cluster federation manager.
 description: |
