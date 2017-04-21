@@ -1,4 +1,5 @@
 name: kube-scheduler
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: kube-scheduler controls the Kubernetes cluster manager.
 description: |

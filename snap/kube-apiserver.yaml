@@ -1,4 +1,5 @@
 name: kube-apiserver
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: kube-apiserver
 description: kube-apiserver

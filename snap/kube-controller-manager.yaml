@@ -1,4 +1,5 @@
 name: kube-controller-manager
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: kube-controller-manager
 description: kube-controller-manager
