@@ -1,4 +1,5 @@
 name: kubectl
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: kubectl controls the Kubernetes cluster manager.
 description: |

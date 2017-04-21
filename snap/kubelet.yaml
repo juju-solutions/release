@@ -1,4 +1,5 @@
 name: kubelet
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: kubelet is the primary “node agent” that runs on each node in Kubernetes.
 description: |

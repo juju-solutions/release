@@ -1,4 +1,5 @@
 name: kubeadm
+architectures: ['KUBE_ARCH']
 version: 'KUBE_VERSION'
 summary: easily bootstrap a secure Kubernetes cluster
 description: |
