@@ -10,15 +10,32 @@ description: |
   described in those PodSpecs are running and healthy. The kubelet doesn’t
   manage containers which were not created by Kubernetes.
 grade: stable
-confinement: classic
+confinement: strict
 
 apps:
   daemon:
     command: run-with-config-args kubelet
     daemon: simple
+    plugs:
+      - home
+      - network
+      - network-bind
+      - docker
+      - firewall-control
+      - network-observe
+      - hardware-observe
+      - kubernetes-support
   kubelet:
     command: kubelet
-
+    plugs:
+      - home
+      - network
+      - network-bind
+      - docker
+      - firewall-control
+      - network-observe
+      - hardware-observe
+      - kubernetes-support
 parts:
   kubelet:
     plugin: dump
