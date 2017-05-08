@@ -24,6 +24,7 @@ apps:
       - firewall-control
       - network-observe
       - hardware-observe
+      - mount-observe
       - kubernetes-support
   kubelet:
     command: kubelet
@@ -35,6 +36,7 @@ apps:
       - firewall-control
       - network-observe
       - hardware-observe
+      - mount-observe
       - kubernetes-support
 parts:
   kubelet:
