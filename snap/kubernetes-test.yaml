@@ -22,14 +22,20 @@ parts:
     source: .
     prepare: |
       set -eu
-
-      mkdir build-temp
-      (cd build-temp
-        tar -xf "$KUBE_SNAP_BINS/kubernetes-test.tar.gz"
-        mv kubernetes/platforms/linux/$KUBE_ARCH/e2e.test ..
-        mv kubernetes/platforms/linux/$KUBE_ARCH/ginkgo ..
-      )
-      rm -rf build-temp
+      if [ "$KUBE_ARCH" = "s390x" ]
+      then
+        echo `pwd`
+        echo $KUBE_SNAP_BINS
+        cp $KUBE_SNAP_ROOT/kubernetes-test/s390x-bins/* .
+      else
+        mkdir build-temp
+        (cd build-temp
+          tar -xf "$KUBE_SNAP_BINS/kubernetes-test.tar.gz"
+          mv kubernetes/platforms/linux/$KUBE_ARCH/e2e.test ..
+          mv kubernetes/platforms/linux/$KUBE_ARCH/ginkgo ..
+        )
+        rm -rf build-temp
+      fi
       chmod +rx e2e.test
       chmod +rx ginkgo
 
