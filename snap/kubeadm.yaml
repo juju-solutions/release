@@ -27,3 +27,4 @@ parts:
       cp $KUBE_SNAP_BINS/$KUBE_ARCH/kubectl .
       mkdir -p meta/hooks
       cp $KUBE_SNAP_ROOT/shared/kubeadm-config.sh meta/hooks/configure
+      cp $KUBE_SNAP_ROOT/shared/kubeadm-remove.sh meta/hooks/remove
