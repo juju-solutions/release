@@ -1,0 +1,21 @@
+name: kubectl
+version: '$KUBE_ERSION'
+summary: kubectl controls the Kubernetes cluster manager.
+description: |
+  kubectl is a command line interface for running commands against Kubernetes
+  clusters.
+grade: stable
+confinement: classic
+
+apps:
+  kubectl:
+    command: kubectl
+
+parts:
+  kubectl:
+    plugin: dump
+    source: snap/build/
+    prepare: |
+      set -eu
+      export KUBE_ARCH=`dpkg --print-architecture` 
+      curl -LO https://dl.k8s.io/v$KUBE_ERSION/bin/linux/${KUBE_ARCH}/kubectl

@@ -6,16 +6,21 @@ ifndef VERBOSE
 endif
 
 targets = kubectl kube-apiserver kube-controller-manager kube-scheduler kubelet kube-proxy kubeadm kubefed kubernetes-test
+prep-targets = prep-kubectl-snap
 
 build = ./build-scripts/build
+prep-build = ./build-scripts/prep-build
 
-.PHONY: $(targets)
+.PHONY: $(targets) $(prep-targets)
 
 default:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} $(targets)
 
 clean:
 	@rm -rf build
+
+prep-kubectl-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kubectl
 
 kubectl:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} kubectl
