@@ -1,5 +1,5 @@
 name: kube-apiserver
-version: '1.8.5'
+version: '$KUBE_ERSION'
 summary: kube-apiserver
 description: kube-apiserver
 grade: stable
@@ -26,7 +26,7 @@ parts:
     prepare: |
       set -eu
       export KUBE_ARCH=`dpkg --print-architecture`
-      curl -LO https://dl.k8s.io/v1.8.5/bin/linux/${KUBE_ARCH}/kube-apiserver
+      curl -LO https://dl.k8s.io/v$KUBE_ERSION/bin/linux/${KUBE_ARCH}/kube-apiserver
       chmod +x kube-apiserver
       cp ../../../shared/run-with-config-args .
       ../../../shared/generate-configure-hook kube-apiserver

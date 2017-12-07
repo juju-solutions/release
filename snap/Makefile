@@ -6,7 +6,7 @@ ifndef VERBOSE
 endif
 
 targets = kubectl kube-apiserver kube-controller-manager kube-scheduler kubelet kube-proxy kubeadm kubefed kubernetes-test
-prep-targets = prep-kubectl-snap prep-kubefed-snap
+prep-targets = prep-kubectl-snap prep-kubefed-snap prep-kube-apiserver-snap prep-kube-controller-manager-snap prep-kube-scheduler-snap prep-kube-proxy-snap prep-kubeadm-snap prep-kubernetes-test-snap
 
 build = ./build-scripts/build
 prep-build = ./build-scripts/prep-build
@@ -24,6 +24,9 @@ prep-kubectl-snap:
 
 prep-kubefed-snap:
 	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kubefed
+
+prep-kube-apiserver-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kube-apiserver
 
 kubectl:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} kubectl
