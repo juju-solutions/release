@@ -3,7 +3,8 @@ set -eu
 
 app="$1"
 
-build_dir=build
+build_dir=../build
 rm -rf $build_dir
 mkdir -p $build_dir
-sed "s/\$KUBE_ERSION/${KUBE_VERSION:1}/g" prep-$app.yaml > snapcraft.yaml
+sed "s/\$KUBE_ERSION/${KUBE_VERSION:1}/g" prep-$app.yaml > ../snapcraft.yaml
+mv ../snap ../snap-dump-hidden

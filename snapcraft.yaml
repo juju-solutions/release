@@ -1,0 +1,22 @@
+name: kubefed
+version: '1.8.5'
+summary: kubefed controls the Kubernetes cluster federation manager.
+description: |
+  kubefed is a command line interface for running commands against Kubernetes
+  federated clusters.
+grade: stable
+confinement: classic
+
+apps:
+  kubefed:
+    command: kubefed
+
+parts:
+  kubefed:
+    plugin: dump
+    source: build/
+    prepare: |
+      set -eu
+      export KUBE_ARCH=`dpkg --print-architecture`
+      curl -LO https://dl.k8s.io/v1.8.5/bin/linux/${KUBE_ARCH}/kubefed
+      chmod +x kubefed
