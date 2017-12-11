@@ -1,5 +1,5 @@
 name: kube-controller-manager
-version: '1.8.5'
+version: '$KUBE_ERSION'
 summary: kube-controller-manager
 description: kube-controller-manager
 grade: stable
@@ -28,7 +28,7 @@ parts:
     prepare: |
       set -eu
       export KUBE_ARCH=`dpkg --print-architecture`
-      curl -LO https://dl.k8s.io/v1.8.5/bin/linux/${KUBE_ARCH}/kube-controller-manager
+      curl -LO https://dl.k8s.io/v$KUBE_ERSION/bin/linux/${KUBE_ARCH}/kube-controller-manager
       chmod +x kube-controller-manager
       cp ../../../shared/run-with-config-args .
       ../../../shared/generate-configure-hook kube-apiserver

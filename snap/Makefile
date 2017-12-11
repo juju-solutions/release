@@ -28,6 +28,9 @@ prep-kubefed-snap:
 prep-kube-apiserver-snap:
 	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kube-apiserver
 
+prep-kube-controller-manager-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kube-controller-manager
+
 kubectl:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} kubectl
 
