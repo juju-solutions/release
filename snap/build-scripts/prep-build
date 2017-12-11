@@ -9,5 +9,6 @@ mkdir -p $build_dir
 sed "s/\$KUBE_ERSION/${KUBE_VERSION:1}/g" prep-$app.yaml > ../snapcraft.yaml
 cp -r shared ../shared
 cp -r kube-controller-manager/* ../shared
+cp -r kubelet/* ../shared
 # Dump will always copy the snap directory in the snap so we make sure it is not there
 mv ../snap ../snap-dump-hidden

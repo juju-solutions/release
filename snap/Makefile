@@ -31,6 +31,15 @@ prep-kube-apiserver-snap:
 prep-kube-controller-manager-snap:
 	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kube-controller-manager
 
+prep-kube-scheduler-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kube-scheduler
+
+prep-kubelet-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kubelet
+
+prep-kube-proxy-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kube-proxy
+
 kubectl:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} kubectl
 

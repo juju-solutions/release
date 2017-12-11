@@ -31,5 +31,5 @@ parts:
       curl -LO https://dl.k8s.io/v$KUBE_ERSION/bin/linux/${KUBE_ARCH}/kube-controller-manager
       chmod +x kube-controller-manager
       cp ../../../shared/run-with-config-args .
-      ../../../shared/generate-configure-hook kube-apiserver
+      ../../../shared/generate-configure-hook kube-controller-manager
       cp ../../../shared/kube-controller-manager-wrapper .
