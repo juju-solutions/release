@@ -40,6 +40,12 @@ prep-kubelet-snap:
 prep-kube-proxy-snap:
 	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kube-proxy
 
+prep-kubeadm-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kubeadm
+
+prep-kubernetes-test-snap:
+	@KUBE_VERSION=${KUBE_VERSION} ${prep-build} kubernetes-test
+
 kubectl:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} kubectl
 

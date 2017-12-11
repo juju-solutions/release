@@ -1,0 +1,21 @@
+name: kubeadm
+version: '$KUBE_ERSION'
+summary: easily bootstrap a secure Kubernetes cluster
+description: |
+  easily bootstrap a secure Kubernetes cluster
+grade: stable
+confinement: classic
+
+apps:
+  kubeadm:
+    command: kubeadm
+
+parts:
+  kubeadm:
+    plugin: dump
+    source: build
+    prepare: |
+      set -eu
+      export KUBE_ARCH=`dpkg --print-architecture`
+      curl -LO https://dl.k8s.io/v$KUBE_ERSION/bin/linux/${KUBE_ARCH}/kubeadm
+      chmod +x kubeadm
