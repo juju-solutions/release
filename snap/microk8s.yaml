@@ -1,0 +1,90 @@
+name: microk8s
+architectures: ['$SNAP_ARCH']
+version: '$KUBE_VERSION'
+summary: microk8s
+description: microk8s description
+grade: stable
+confinement: classic
+
+apps:
+  daemon-etcd:
+    command: etcd
+    daemon: simple
+    plugs:
+        - network
+        - network-bind
+  daemon-docker:
+    command: dockerd
+    daemon: simple
+    plugs:
+        - network
+        - network-bind
+  daemon-apiserver:
+    command: kube-apiserver --insecure-bind-address=0.0.0.0 --cert-dir=${SNAP_DATA} --etcd-servers='http://127.0.0.1:2379'
+    daemon: simple
+    plugs:
+        - network
+        - network-bind
+  daemon-controller-manager:
+    command: kube-controller-manager --master='http://127.0.0.1:8080'
+    daemon: simple
+    plugs:
+        - network
+        - network-bind
+  daemon-scheduler:
+    command: kube-scheduler --master='http://127.0.0.1:8080'
+    daemon: simple
+    plugs:
+        - network
+        - network-bind
+        - home
+  daemon-kubelet:
+    command: kubelet --cert-dir=${SNAP_DATA} --root-dir=${SNAP_DATA} --docker-root=${SNAP_DATA} --fail-swap-on=false --feature-gates=DevicePlugins=false
+    daemon: simple
+    plugs:
+        - network
+        - network-bind
+        - home
+  daemon-proxy:
+    command: kube-proxy --master='http://127.0.0.1:8080'
+    daemon: simple
+    plugs:
+        - network
+        - network-bind
+        - home
+  kubectl:
+    command: kubectl
+
+parts:
+  microk8s:
+    plugin: dump
+    build-attributes: [no-patchelf]
+    stage-packages:
+    - ceph-common:$SNAP_ARCH
+    - conntrack:$SNAP_ARCH
+    - docker.io:$SNAP_ARCH
+    source: .
+    prepare: |
+      set -eux
+      echo "Preparing etcd"
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/etcd .
+
+      echo "Preparing kube-apiserver"
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kube-apiserver .
+
+      echo "Preparing kube-controller-manager"
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kube-controller-manager .
+
+      echo "Preparing kube-scheduler"
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kube-scheduler .
+
+      echo "Preparing kubelet"
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kubelet .
+
+      echo "Preparing kube-proxy"
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kube-proxy .
+
+      echo "Preparing kubelet"
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kubectl .
+    snap:
+      - .

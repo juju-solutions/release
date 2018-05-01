@@ -9,13 +9,16 @@ targets = kubectl kube-apiserver kube-controller-manager kube-scheduler kubelet 
 
 build = ./build-scripts/build
 
-.PHONY: $(targets)
+.PHONY: $(targets) microk8s
 
 default:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} $(targets)
 
 clean:
 	@rm -rf build
+
+microk8s:
+	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ./build-scripts/build-microk8s
 
 kubectl:
 	@KUBE_VERSION=${KUBE_VERSION} KUBE_ARCH="${KUBE_ARCH}" ${build} kubectl
