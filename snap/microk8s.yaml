@@ -53,7 +53,7 @@ apps:
         - network-bind
         - home
   kubectl:
-    command: kubectl
+    command: kubectl --kubeconfig=$SNAP/client.config
 
 parts:
   microk8s:
@@ -68,21 +68,21 @@ parts:
       set -eux
       echo "Preparing etcd"
       mkdir -p opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/flannel opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/ptp opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/host-local opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/portmap opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/tuning opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/vlan opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/sample opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/dhcp opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/ipvlan opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/macvlan opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/loopback opt/cni/bin/
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/bridge opt/cni/bin/
+      cp $KUBE_SNAP_BINS/flannel opt/cni/bin/
+      cp $KUBE_SNAP_BINS/ptp opt/cni/bin/
+      cp $KUBE_SNAP_BINS/host-local opt/cni/bin/
+      cp $KUBE_SNAP_BINS/portmap opt/cni/bin/
+      cp $KUBE_SNAP_BINS/tuning opt/cni/bin/
+      cp $KUBE_SNAP_BINS/vlan opt/cni/bin/
+      cp $KUBE_SNAP_BINS/sample opt/cni/bin/
+      cp $KUBE_SNAP_BINS/dhcp opt/cni/bin/
+      cp $KUBE_SNAP_BINS/ipvlan opt/cni/bin/
+      cp $KUBE_SNAP_BINS/macvlan opt/cni/bin/
+      cp $KUBE_SNAP_BINS/loopback opt/cni/bin/
+      cp $KUBE_SNAP_BINS/bridge opt/cni/bin/
 
       echo "Preparing etcd"
-      cp $KUBE_SNAP_BINS/$KUBE_ARCH/etcd .
+      cp $KUBE_SNAP_BINS/etcd .
 
       echo "Preparing kube-apiserver"
       cp $KUBE_SNAP_BINS/$KUBE_ARCH/kube-apiserver .
