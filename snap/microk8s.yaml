@@ -1,10 +1,10 @@
 name: microk8s
 architectures: ['$SNAP_ARCH']
 version: '$KUBE_VERSION'
-summary: microk8s
-description: microk8s description
+summary: Kubernetes in your box.
+description: Microk8s deploys and configures all kubernetes services in a snap.
 grade: stable
-confinement: classic
+confinement: devmode
 
 apps:
   daemon-etcd:
