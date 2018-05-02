@@ -4,6 +4,7 @@ set -eu
 apps="kubectl kube-apiserver kube-controller-manager kube-scheduler kubelet kube-proxy"
 architectures="$KUBE_ARCH"
 ETCD_VERSION="v3.3.4"
+CNI_VERSION="v0.6.0"
 
 KUBE_SNAP_BINS="${KUBE_SNAP_BINS:-}"
 if [ -z "$KUBE_SNAP_BINS" ]; then
@@ -26,10 +27,12 @@ if [ -z "$KUBE_SNAP_BINS" ]; then
         )
       done
     done
-    #TODO: get the versions configurable
     curl -LO https://github.com/coreos/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-$KUBE_ARCH.tar.gz
     tar -zxvf etcd-${ETCD_VERSION}-linux-$KUBE_ARCH.tar.gz
     cp etcd-${ETCD_VERSION}-linux-$KUBE_ARCH/etcd .
+
+    curl -LO https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-$KUBE_ARCH-${CNI_VERSION}.tgz
+    tar -zxvf cni-plugins-$KUBE_ARCH-${CNI_VERSION}.tgz
   )
 fi
 
