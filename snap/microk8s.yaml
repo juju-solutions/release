@@ -68,6 +68,7 @@ parts:
     - ceph-common:$SNAP_ARCH
     - conntrack:$SNAP_ARCH
     - docker.io:$SNAP_ARCH
+    - aufs-tools:$SNAP_ARCH
     source: .
     prepare: |
       set -eu
