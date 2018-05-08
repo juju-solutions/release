@@ -8,45 +8,45 @@ confinement: devmode
 
 apps:
   daemon-etcd:
-    command: etcd --data-dir=${SNAP_DATA}
+    command: run-with-config-args etcd
     daemon: simple
     plugs:
         - network
         - network-bind
   daemon-docker:
-    command: dockerd -H unix://${SNAP_DATA}/docker.sock   --exec-root ${SNAP_DATA} --graph ${SNAP_DATA} --pidfile ${SNAP_DATA}/docker-pid
+    command: run-with-config-args dockerd
     daemon: simple
     plugs:
         - network
         - network-bind
+
   daemon-apiserver:
-    command: kube-apiserver --v=0 --insecure-bind-address=0.0.0.0 --cert-dir=${SNAP_DATA} --etcd-servers='http://127.0.0.1:2379' --service-cluster-ip-range=10.152.183.0/24 --authorization-mode=AlwaysAllow --basic-auth-file=$SNAP/basic_auth.csv  --token-auth-file=$SNAP/known_token.csv --admission-control=""
+    command: run-with-config-args kube-apiserver
     daemon: simple
     plugs:
         - network
         - network-bind
+
   daemon-controller-manager:
-    command: kube-controller-manager --v=0 --master='http://127.0.0.1:8080'
+    command: run-with-config-args kube-controller-manager
     daemon: simple
     plugs:
         - network
         - network-bind
   daemon-scheduler:
-    command: kube-scheduler --v=0 --master='http://127.0.0.1:8080'
+    command: run-with-config-args kube-scheduler
     daemon: simple
     plugs:
         - network
         - network-bind
         - home
+
   daemon-kubelet:
-    command: kubelet --v=0 --cert-dir=${SNAP_DATA} --network-plugin=kubenet --root-dir=${SNAP_DATA} --docker-root=${SNAP_DATA} --fail-swap-on=false --feature-gates=DevicePlugins=false --pod-cidr=10.1.1.0/24 --non-masquerade-cidr=10.152.183.0/24 --cni-bin-dir=${SNAP}/opt/cni/bin/ --kubeconfig=$SNAP/kubelet.config --docker-endpoint unix://${SNAP_DATA}/docker.sock
+    command: run-with-config-args kubelet
     daemon: simple
-    plugs:
-        - network
-        - network-bind
-        - home
+
   daemon-proxy:
-    command: kube-proxy --v=0 --master='http://127.0.0.1:8080' --cluster-cidr=10.152.183.0/24 --kubeconfig=$SNAP/kubeproxy.config
+    command: run-with-config-args kube-proxy
     daemon: simple
     plugs:
         - network
@@ -54,6 +54,11 @@ apps:
         - home
   kubectl:
     command: kubectl --kubeconfig=$SNAP/client.config
+
+  enable:
+    command: microk8s-enable.wrapper
+  disable:
+    command: microk8s-disable.wrapper
 
 parts:
   microk8s:
@@ -65,8 +70,22 @@ parts:
     - docker.io:$SNAP_ARCH
     source: .
     prepare: |
-      set -eux
-      echo "Preparing etcd"
+      set -eu
+      $KUBE_SNAP_ROOT/microk8s-resources/create-install-hook
+      cp -r $KUBE_SNAP_ROOT/microk8s-resources/default-args .
+      cp $KUBE_SNAP_ROOT/microk8s-resources/run-with-config-args .
+
+      echo "Building certs"
+      mkdir certs
+      openssl genrsa -out ./certs/serviceaccount.key 2048
+      openssl genrsa -out ./certs/ca.key 2048
+      openssl req -x509 -new -nodes -key ./certs/ca.key -subj "/CN=127.0.0.1" -days 10000 -out ./certs/ca.crt
+      openssl genrsa -out ./certs/server.key 2048
+      openssl req -new -key ./certs/server.key -out ./certs/server.csr -config $KUBE_SNAP_ROOT/microk8s-resources/certs/csr.conf
+      openssl x509 -req -in ./certs/server.csr -CA ./certs/ca.crt -CAkey ./certs/ca.key -CAcreateserial -out ./certs/server.crt -days 100000 -extensions v3_ext -extfile $KUBE_SNAP_ROOT/microk8s-resources/certs/csr.conf
+      rm -rf .srl
+
+      echo "Preparing cni"
       mkdir -p opt/cni/bin/
       cp $KUBE_SNAP_BINS/flannel opt/cni/bin/
       cp $KUBE_SNAP_BINS/ptp opt/cni/bin/
@@ -96,8 +115,9 @@ parts:
       cp $KUBE_SNAP_BINS/$KUBE_ARCH/kube-scheduler .
 
       echo "Preparing kubelet"
+      mkdir -p configs
       cp $KUBE_SNAP_BINS/$KUBE_ARCH/kubelet .
-      cp $KUBE_SNAP_ROOT/microk8s-resources/kubelet.config .
+      cp $KUBE_SNAP_ROOT/microk8s-resources/kubelet.config ./configs/
 
       echo "Preparing kube-proxy"
       cp $KUBE_SNAP_BINS/$KUBE_ARCH/kube-proxy .
@@ -109,5 +129,10 @@ parts:
       echo "Preparing user config"
       cp $KUBE_SNAP_ROOT/microk8s-resources/client.config .
 
+      echo "Preparing capabilities"
+      cp -r $KUBE_SNAP_ROOT/microk8s-resources/yaml .
+
+      echo "Preparing commands"
+      cp $KUBE_SNAP_ROOT/microk8s-resources/wrappers/* .
     snap:
       - .
