@@ -27,7 +27,7 @@ if [ -z "$KUBE_SNAP_BINS" ]; then
             curl -LO \
               https://dl.k8s.io/${KUBE_VERSION}/bin/linux/$arch/$app
             chmod +x $app
-            if [[ ! -x $app ]]; then
+            if ! file ${app} 2>&1 | grep -q 'executable'; then
               echo "${app} is not an executable"
               exit 1
             fi
