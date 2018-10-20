@@ -2,7 +2,7 @@ FROM arm64v8/ubuntu:xenial
 RUN apt-get update && \
   apt-get dist-upgrade --yes && \
   apt-get install --yes \
-  snapcraft curl file sudo jq squashfs-tools && \
+  snapcraft curl file make sudo jq squashfs-tools && \
   apt-get autoclean --yes && \
   apt-get clean --yes
 
