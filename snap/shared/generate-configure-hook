@@ -39,6 +39,7 @@ function config-arg-bool {
   fi
 }
 
+echo "$(snapctl get args)" >> $SNAP_DATA/args
 EOF
 
 ./$app -h 2>&1 | grep '\-\-' | perl -pe 's/.*?--(\S+ \S*).*/\1/' | while read line; do
