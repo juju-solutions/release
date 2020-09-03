@@ -12,10 +12,10 @@ if [ -z "$KUBE_SNAP_BINS" ]; then
   (cd $KUBE_SNAP_BINS
     for app in $apps; do
       if [ "$app" = "kubernetes-test" ]; then
-        echo "Fetching $app $KUBE_VERSION"
+        echo "Fetching https://dl.k8s.io/$KUBE_VERSION/$app-linux-$KUBE_ARCH.tar.gz"
         curl -LO \
-          https://dl.k8s.io/${KUBE_VERSION}/${app}.tar.gz
-        if ! file ${app}.tar.gz 2>&1 | grep -q 'gzip'; then
+             https://dl.k8s.io/${KUBE_VERSION}/${app}-linux-${KUBE_ARCH}.tar.gz
+        if ! file ${app}-linux-${KUBE_ARCH}.tar.gz 2>&1 | grep -q 'gzip'; then
           echo "${app}.tar.gz is not a gzip archive"
           exit 1
         fi
