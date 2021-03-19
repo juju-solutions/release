@@ -1,0 +1,24 @@
+name: kubefed
+architectures: ['$SNAP_ARCH']
+version: '$KUBE_VERSION'
+summary: kubefed controls the Kubernetes cluster federation manager.
+description: |
+  kubefed is a command line interface for running commands against Kubernetes
+  federated clusters.
+grade: stable
+confinement: classic
+
+apps:
+  kubefed:
+    command: kubefed
+
+parts:
+  kubefed:
+    plugin: dump
+    build-attributes: [no-patchelf]
+    source: .
+    override-build: |
+      set -eu
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kubefed .
+
+      snapcraftctl build

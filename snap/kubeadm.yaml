@@ -1,0 +1,23 @@
+name: kubeadm
+architectures: ['$SNAP_ARCH']
+version: '$KUBE_VERSION'
+summary: easily bootstrap a secure Kubernetes cluster
+description: |
+  easily bootstrap a secure Kubernetes cluster
+grade: stable
+confinement: classic
+
+apps:
+  kubeadm:
+    command: kubeadm
+
+parts:
+  kubeadm:
+    plugin: dump
+    build-attributes: [no-patchelf]
+    source: .
+    override-build: |
+      set -eu
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kubeadm .
+
+      snapcraftctl build

@@ -1,0 +1,39 @@
+name: kubernetes-test
+architectures: ['$SNAP_ARCH']
+version: '$KUBE_VERSION'
+summary: tests for kubernetes
+description: |
+  tests for kubernetes
+grade: stable
+confinement: classic
+
+apps:
+  e2e:
+    command: ginkgo-e2e
+    # These will be needed for strict confinement:
+    # plugs:
+    #   - network
+    #   - network-bind
+    #   - home
+
+parts:
+  kubernetes-test:
+    plugin: dump
+    source: .
+    build-attributes: [no-patchelf]
+    override-build: |
+      set -eu
+
+      mkdir build-temp
+      (cd build-temp
+        tar -xf "$KUBE_SNAP_BINS/kubernetes-test-linux-$KUBE_ARCH.tar.gz"
+        mv kubernetes/test/bin/e2e.test ..
+        mv kubernetes/test/bin/ginkgo ..
+      )
+      rm -rf build-temp
+      chmod +rx e2e.test
+      chmod +rx ginkgo
+
+      cp "$KUBE_SNAP_ROOT/kubernetes-test/ginkgo-e2e" .
+
+      snapcraftctl build

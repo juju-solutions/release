@@ -1,0 +1,149 @@
+name: kubelet
+architectures: ['$SNAP_ARCH']
+version: '$KUBE_VERSION'
+summary: kubelet is the primary “node agent” that runs on each node in Kubernetes.
+description: |
+  The kubelet is the primary “node agent” that runs on each node. The kubelet
+  works in terms of a PodSpec. A PodSpec is a YAML or JSON object that describes
+  a pod. The kubelet takes a set of PodSpecs that are provided through various
+  mechanisms (primarily through the apiserver) and ensures that the containers
+  described in those PodSpecs are running and healthy. The kubelet doesn’t
+  manage containers which were not created by Kubernetes.
+grade: stable
+confinement: classic
+
+apps:
+  daemon:
+    command: run-with-config-args kubelet-wrapper
+    daemon: simple
+    restart-condition: always  # needed for Dynamic Kubelet Config support
+  kubelet:
+    command: kubelet
+
+parts:
+  kubelet:
+    plugin: dump
+    source: .
+    build-attributes: [no-patchelf]
+    override-build: |
+      set -eu
+      cp $KUBE_SNAP_BINS/$KUBE_ARCH/kubelet .
+      cp $KUBE_SNAP_ROOT/shared/run-with-config-args .
+      cp $KUBE_SNAP_ROOT/kubelet/kubelet-wrapper .
+      $KUBE_SNAP_ROOT/shared/generate-configure-hook kubelet
+
+      # Many of the args in kubelet became hidden with the introduction of
+      # KubeletConfiguration. We need to include them for backward
+      # compatibility.
+      alias add-arg=$KUBE_SNAP_ROOT/shared/add-arg-to-configure-hook
+
+      # Hard-coded args generated from a diff of v1.9.6 -> v1.10.0
+      add-arg string address
+      add-arg bool allow-privileged
+      add-arg bool anonymous-auth
+      add-arg string application-metrics-count-limit
+      add-arg bool authentication-token-webhook
+      add-arg string authentication-token-webhook-cache-ttl
+      add-arg string authorization-mode
+      add-arg string authorization-webhook-cache-authorized-ttl
+      add-arg string authorization-webhook-cache-unauthorized-ttl
+      add-arg string boot-id-file
+      add-arg string cadvisor-port
+      add-arg string cgroup-driver
+      add-arg string cgroup-root
+      add-arg bool cgroups-per-qos
+      add-arg string client-ca-file
+      add-arg string cloud-provider-gce-lb-src-cidrs
+      add-arg string cluster-dns
+      add-arg string cluster-domain
+      add-arg string container-hints
+      add-arg string containerd
+      add-arg bool contention-profiling
+      add-arg bool cpu-cfs-quota
+      add-arg string cpu-manager-policy
+      add-arg string cpu-manager-reconcile-period
+      add-arg string docker
+      add-arg bool docker-disable-shared-pid
+      add-arg string docker-env-metadata-whitelist
+      add-arg bool docker-only
+      add-arg bool docker-tls
+      add-arg string docker-tls-ca
+      add-arg string docker-tls-cert
+      add-arg string docker-tls-key
+      add-arg bool enable-controller-attach-detach
+      add-arg bool enable-debugging-handlers
+      add-arg bool enable-load-reader
+      add-arg string enforce-node-allocatable
+      add-arg string event-burst
+      add-arg string event-qps
+      add-arg string event-storage-age-limit
+      add-arg string event-storage-event-limit
+      add-arg string eviction-hard
+      add-arg string eviction-max-pod-grace-period
+      add-arg string eviction-minimum-reclaim
+      add-arg string eviction-pressure-transition-period
+      add-arg string eviction-soft
+      add-arg string eviction-soft-grace-period
+      add-arg bool fail-swap-on
+      add-arg string feature-gates
+      add-arg string file-check-frequency
+      add-arg string global-housekeeping-interval
+      add-arg string google-json-key
+      add-arg string hairpin-mode
+      add-arg string healthz-bind-address
+      add-arg string healthz-port
+      add-arg string host-ipc-sources
+      add-arg string host-network-sources
+      add-arg string host-pid-sources
+      add-arg string http-check-frequency
+      add-arg string image-gc-high-threshold
+      add-arg string image-gc-low-threshold
+      add-arg string init-config-dir
+      add-arg string iptables-drop-bit
+      add-arg string iptables-masquerade-bit
+      add-arg string kube-api-burst
+      add-arg string kube-api-content-type
+      add-arg string kube-api-qps
+      add-arg string kube-reserved
+      add-arg string kube-reserved-cgroup
+      add-arg string kubelet-cgroups
+      add-arg bool log-cadvisor-usage
+      add-arg string machine-id-file
+      add-arg bool make-iptables-util-chains
+      add-arg string manifest-url
+      add-arg string manifest-url-header
+      add-arg string max-open-files
+      add-arg string max-pods
+      add-arg string minimum-image-ttl-duration
+      add-arg string node-status-update-frequency
+      add-arg string oom-score-adj
+      add-arg string pod-cidr
+      add-arg string pod-manifest-path
+      add-arg string pods-per-core
+      add-arg string port
+      add-arg bool protect-kernel-defaults
+      add-arg string read-only-port
+      add-arg string registry-burst
+      add-arg string registry-qps
+      add-arg string resolv-conf
+      add-arg string rkt-api-endpoint
+      add-arg string rkt-path
+      add-arg string runtime-request-timeout
+      add-arg bool serialize-image-pulls
+      add-arg string storage-driver-buffer-duration
+      add-arg string storage-driver-db
+      add-arg string storage-driver-host
+      add-arg string storage-driver-password
+      add-arg bool storage-driver-secure
+      add-arg string storage-driver-table
+      add-arg string storage-driver-user
+      add-arg string streaming-connection-idle-timeout
+      add-arg string sync-frequency
+      add-arg string system-cgroups
+      add-arg string system-reserved
+      add-arg string system-reserved-cgroup
+      add-arg string tls-cert-file
+      add-arg string tls-private-key-file
+      add-arg string volume-stats-agg-period
+
+      snapcraftctl build
